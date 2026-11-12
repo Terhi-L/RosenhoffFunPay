@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Screen, primaryButton } from '../components/Screen'
 import { Slogan } from '../components/Slogan'
@@ -10,7 +9,6 @@ import {
   OrangeSliceIcon,
   ScanIcon,
 } from '../components/icons'
-import { clearSessionStores } from '../lib/store'
 
 export const Route = createFileRoute('/')({ component: Welcome })
 
@@ -36,14 +34,6 @@ const steps = [
 ]
 
 function Welcome() {
-  // Open /?reset=1 before a demo run to forget everything from the last one.
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).has('reset')) {
-      clearSessionStores()
-      window.location.replace('/')
-    }
-  }, [])
-
   return (
     <Screen>
       <header className="flex items-center justify-between px-6 pt-[18px] pb-1.5">

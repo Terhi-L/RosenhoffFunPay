@@ -1,5 +1,5 @@
 // OWNER: Terhi. Everyone may read; only the registration screens write.
-import { createSessionStore } from './store'
+import { createStore } from './store'
 
 export interface Account {
   phone: string // 8 digits, no spaces
@@ -47,12 +47,12 @@ interface RegistrationState {
   neighbour: Neighbour
 }
 
-const registrationStore = createSessionStore<RegistrationState>(
-  'registration',
-  { account: { phone: '', email: '', name: '' }, neighbour: 'unknown' },
-)
+const registrationStore = createStore<RegistrationState>({
+  account: { phone: '', email: '', name: '' },
+  neighbour: 'unknown',
+})
 
-const profileStore = createSessionStore<Profile>('profile', DEFAULT_PROFILE)
+const profileStore = createStore<Profile>(DEFAULT_PROFILE)
 
 function setAccount(account: Account) {
   registrationStore.set((state) => ({ ...state, account }))

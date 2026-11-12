@@ -1,4 +1,4 @@
-import { createSessionStore } from './store'
+import { createStore } from './store'
 
 export interface BasketItem {
   slug: string
@@ -12,9 +12,7 @@ export interface BasketItem {
 
 type BasketProduct = Pick<BasketItem, 'slug' | 'name' | 'price' | 'image'>
 
-const basketStore = createSessionStore<{ items: Array<BasketItem> }>('basket', {
-  items: [],
-})
+const basketStore = createStore<{ items: Array<BasketItem> }>({ items: [] })
 
 function add(
   product: BasketProduct,
