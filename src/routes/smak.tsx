@@ -16,19 +16,43 @@ export const Route = createFileRoute('/smak')({
   component: TasteProfile,
 })
 
+/** The app's running commentary under each question. */
+const verdict = 'mt-2 mb-0 text-sm font-bold text-alert empty:hidden'
+
 const countryLabel = (country: string) =>
   country === 'Norge' ? 'Norge (kjedelig)' : country
 
-const tastes: Array<{ value: Taste; label: string }> = [
-  { value: 'søtt', label: 'Søtt' },
-  { value: 'salt', label: 'Salt' },
-  { value: 'begge', label: 'Begge' },
+const tastes: Array<{ value: Taste; label: string; verdict: string }> = [
+  { value: 'søtt', label: 'Søtt', verdict: 'Søtt. Tannlegen din er varslet.' },
+  { value: 'salt', label: 'Salt', verdict: 'Salt. Hjertet ditt er varslet.' },
+  {
+    value: 'begge',
+    label: 'Begge',
+    verdict: 'Begge. Selvfølgelig. Du er grunnen til at vi finnes.',
+  },
 ]
 
-function hungerText(hunger: number) {
-  if (hunger <= 3) return 'Notert. Vi anbefaler likevel snacks.'
-  if (hunger <= 7) return 'Notert. Vi anbefaler ekstra snacks.'
-  return 'Notert. Vi anbefaler alt.'
+// One roast per notch on the slider, 1 → 10.
+const hungerVerdicts = [
+  'Løgn. Ingen åpner en snacks-app mett.',
+  'Mett, sier du. Det sa de forrige også.',
+  'Notert og ignorert. Du får snacks likevel.',
+  'Litt sulten. Det er sånn det alltid starter.',
+  'Midt på treet. Lommeboka di har begynt å svette.',
+  'Sulten nok til å ta dårlige valg. Vi elsker det.',
+  'Nå snakker vi. Lageret er varslet.',
+  'Aldri handle sulten, sier de. Vi sier ingenting.',
+  'Du burde ikke slippes løs i en butikk nå. Velkommen inn.',
+  'Vi har låst opp den farlige hylla. Kondolerer til kontoen din.',
+]
+
+function countryVerdict(countries: Array<string>) {
+  if (countries.length === 0) return 'Ingen? Greit, da bestemmer vi.'
+  if (countries.length === 1 && countries[0] === 'Norge')
+    return 'Bare Norge. I en amerikansk butikk. Modig.'
+  if (countries.length === COUNTRIES.length)
+    return 'Alle sammen. Det er ikke smak, det er panikk.'
+  return ''
 }
 
 function TasteProfile() {
@@ -41,7 +65,7 @@ function TasteProfile() {
       <StepHeader step={3} back="/kode" />
       <main className="flex flex-col gap-6 px-6 pt-6 pb-2">
         <StepIntro title="La oss bli kjent">
-          Vi bruker svarene til å anbefale varer til deg. Ganske mye.
+          Svar ærlig. Alt du sier kan og vil bli brukt mot deg på hylla.
         </StepIntro>
 
         <fieldset className="m-0 border-0 p-0">
@@ -74,6 +98,9 @@ function TasteProfile() {
               )
             })}
           </div>
+          <p aria-live="polite" className={verdict}>
+            {countryVerdict(profile.countries)}
+          </p>
         </fieldset>
 
         <fieldset className="m-0 border-0 p-0">
@@ -96,6 +123,9 @@ function TasteProfile() {
               )
             })}
           </div>
+          <p aria-live="polite" className={verdict}>
+            {tastes.find(({ value }) => value === profile.taste)?.verdict}
+          </p>
         </fieldset>
 
         <div className="flex flex-col gap-2">
@@ -118,15 +148,11 @@ function TasteProfile() {
             aria-hidden="true"
             className="flex justify-between text-[13px] text-muted"
           >
-            <span>Mett</span>
-            <span>Kan spise en hel hylle</span>
+            <span>Mett (løgn)</span>
+            <span>Farlig for lommeboka</span>
           </div>
-          <p
-            id="sult-svar"
-            aria-live="polite"
-            className="m-0 text-sm font-bold text-alert"
-          >
-            {hungerText(profile.hunger)}
+          <p id="sult-svar" aria-live="polite" className={verdict}>
+            {hungerVerdicts[profile.hunger - 1]}
           </p>
         </div>
       </main>
