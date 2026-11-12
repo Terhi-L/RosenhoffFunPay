@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { Screen, StepHeader, primaryButton } from '../components/Screen'
+import { formatCardNumber, formatExpiry } from '../lib/card'
 import { formatNok, useCheckout, useCheckoutItems } from '../lib/checkout'
 
 export const Route = createFileRoute('/betaling')({ component: Payment })
@@ -91,7 +92,9 @@ function Payment() {
                   autoComplete="cc-number"
                   placeholder="0000 0000 0000 0000"
                   value={field.state.value}
-                  onChange={(event) => field.handleChange(event.target.value)}
+                  onChange={(event) =>
+                    field.handleChange(formatCardNumber(event.target.value))
+                  }
                   className={`${input} border-line-strong`}
                 />
               </div>
@@ -112,7 +115,9 @@ function Payment() {
                     autoComplete="cc-exp"
                     placeholder="MM / ÅÅ"
                     value={field.state.value}
-                    onChange={(event) => field.handleChange(event.target.value)}
+                    onChange={(event) =>
+                      field.handleChange(formatExpiry(event.target.value))
+                    }
                     className={`${input} border-line-strong`}
                   />
                 </div>
