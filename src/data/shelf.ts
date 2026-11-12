@@ -16,6 +16,8 @@ export interface ShelfProduct {
   image: string | null
   /** false renders as an empty gap labelled "Tomt" */
   inStock: boolean
+  /** placeholder colour for hard-coded products without an image */
+  accent?: string
 }
 
 export interface Aisle {
@@ -43,6 +45,18 @@ export const MILK: ShelfProduct = {
   price: MILK_PRICE,
   image: null,
   inStock: true,
+  accent: '#1f74a8',
+}
+
+/** Fresh bread isn't in the catalogue either. The demo buys bread and milk. TODO: real price. */
+export const BREAD_PRICE = 39
+export const BREAD: ShelfProduct = {
+  slug: 'brod',
+  name: 'Brød 750 g',
+  price: BREAD_PRICE,
+  image: null,
+  inStock: true,
+  accent: '#c98a2b',
 }
 
 interface AisleDef {
@@ -51,6 +65,8 @@ interface AisleDef {
   categories: Array<string>
   /** also claims products whose name matches, whatever their category */
   names?: RegExp
+  /** a hard-coded product placed first on this shelf (0 = top) */
+  fixed?: { product: ShelfProduct; shelf: number }
 }
 
 const DH = 'Dagligvare Handel'
@@ -111,11 +127,13 @@ const AISLE_DEFS: Array<AisleDef> = [
       `${DH} > Tørrvarer > Bakevarer`,
       `${DH} > Tørrvarer > Dessert`,
       `${DH} > Tørrvarer > Kjeks`,
+      `${DH} > Tørrvarer > Brød`,
       `${AMD} > Amerikansk Bakevarer`,
       `${AMD} > Amerikansk Dessert`,
       `${AMD} > Amerikansk Kjeks & Kaker`,
       'Canadiske Produkter > Canadiske Kjeks & Kaker',
     ],
+    fixed: { product: BREAD, shelf: 2 },
   },
   {
     name: 'Meieri · helt bakerst',
@@ -194,6 +212,13 @@ export function buildAisles(catalog: Array<CatalogProduct>): Array<Aisle> {
     const shelves = Array.from({ length: SHELVES_PER_AISLE }, (_, shelf) =>
       tiles.slice(shelf * PRODUCTS_PER_SHELF, (shelf + 1) * PRODUCTS_PER_SHELF),
     )
+    if (def.fixed) {
+      const { product, shelf } = def.fixed
+      shelves[shelf] = [
+        product,
+        ...shelves[shelf].slice(0, PRODUCTS_PER_SHELF - 1),
+      ]
+    }
     return { no: index + 1, name: def.name, shelves }
   })
 }
@@ -287,4 +312,37 @@ export function alternativeFor(
   }
   const slug = recommended.find((s) => s !== pickedSlug)
   return tiles.find((tile) => tile.slug === slug)
+}
+
+/** Lower case, and æ/ø/å typed as ae/o/a, so "brod" finds "Brød". */
+const fold = (text: string) =>
+  text.toLowerCase().replace(/æ/g, 'ae').replace(/ø/g, 'o').replace(/å/g, 'a')
+
+/**
+ * The product a search is after, for the hot/cold hint: names that start with
+ * the query first, then words that do, then anything containing it. Shorter
+ * names win ties, so "melk" finds the milk and not the milk chocolate.
+ */
+export function findProduct(
+  aisles: Array<Aisle>,
+  query: string,
+): ShelfProduct | undefined {
+  const q = fold(query.trim())
+  if (q.length < 2) return undefined
+  return aisles
+    .flatMap((aisle) => aisle.shelves.flat())
+    .filter((tile) => tile.inStock)
+    .flatMap((tile) => {
+      const name = fold(tile.name)
+      const rank = name.startsWith(q)
+        ? 0
+        : name.split(/[^\p{L}\p{N}]+/u).some((word) => word.startsWith(q))
+          ? 1
+          : name.includes(q)
+            ? 2
+            : -1
+      return rank < 0 ? [] : [{ tile, rank }]
+    })
+    .sort((a, b) => a.rank - b.rank || a.tile.name.length - b.tile.name.length)
+    .at(0)?.tile
 }
