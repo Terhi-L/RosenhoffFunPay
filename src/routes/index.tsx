@@ -90,6 +90,11 @@ function Welcome() {
             Jeg har allerede konto
           </Link>
         </p>
+        <p className="m-0 text-center text-sm">
+          <Link to="/produkter" className="font-bold text-navy underline">
+            Se produktene våre
+          </Link>
+        </p>
       </div>
     </Screen>
   )
