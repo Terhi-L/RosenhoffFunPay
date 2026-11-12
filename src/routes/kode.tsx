@@ -7,12 +7,24 @@ import {
   primaryButton,
 } from '../components/Screen'
 import { ClockIcon } from '../components/icons'
+import { SmsNotification } from '../components/registration/SmsNotification'
 import { formatPhone, useRegistration } from '../lib/registration'
+import type { Sms } from '../components/registration/SmsNotification'
 
 export const Route = createFileRoute('/kode')({ component: Code })
 
 const CODE_LENGTH = 6
 const RESEND_SECONDS = 42
+const SMS_DELAY_MS = 2200
+const SMS_SHOWN_MS = 8000
+
+function smsText(count: number, code: string) {
+  if (count === 1)
+    return `Koden din er ${code}. Ikke del den med noen. Ikke engang kassa, den er lagt ned.`
+  if (count === 2)
+    return `Ny kode: ${code}. Den forrige var også fin, men nå er den utløpt.`
+  return `Kode nummer ${count}: ${code}. Vi begynner å lure litt på deg.`
+}
 
 function Code() {
   const navigate = useNavigate()
@@ -22,12 +34,31 @@ function Code() {
   )
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS)
   const inputs = useRef<Array<HTMLInputElement | null>>([])
+  // How many SMSes we've "sent"; each bump delivers a new one after a delay.
+  const [sent, setSent] = useState(1)
+  const [sms, setSms] = useState<Sms | null>(null)
+  const [smsVisible, setSmsVisible] = useState(false)
 
   useEffect(() => {
     if (secondsLeft === 0) return
     const timer = setTimeout(() => setSecondsLeft(secondsLeft - 1), 1000)
     return () => clearTimeout(timer)
   }, [secondsLeft])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const code = String(Math.floor(100000 + Math.random() * 900000))
+      setSms({ code, text: smsText(sent, code) })
+      setSmsVisible(true)
+    }, SMS_DELAY_MS)
+    return () => clearTimeout(timer)
+  }, [sent])
+
+  useEffect(() => {
+    if (!smsVisible) return
+    const timer = setTimeout(() => setSmsVisible(false), SMS_SHOWN_MS)
+    return () => clearTimeout(timer)
+  }, [smsVisible, sms])
 
   function fill(from: number, value: string) {
     const typed = value.replace(/\D/g, '').slice(0, CODE_LENGTH - from)
@@ -105,7 +136,10 @@ function Code() {
               ) : (
                 <button
                   type="button"
-                  onClick={() => setSecondsLeft(RESEND_SECONDS)}
+                  onClick={() => {
+                    setSecondsLeft(RESEND_SECONDS)
+                    setSent(sent + 1)
+                  }}
                   className="cursor-pointer border-0 bg-transparent p-0 font-sans text-sm font-bold text-plum underline"
                 >
                   Send ny kode
@@ -125,6 +159,17 @@ function Code() {
           </button>
         </div>
       </form>
+
+      <SmsNotification
+        sms={sms}
+        visible={smsVisible}
+        onTap={() => {
+          if (!sms) return
+          setDigits(sms.code.split(''))
+          setSmsVisible(false)
+          inputs.current[CODE_LENGTH - 1]?.focus()
+        }}
+      />
     </Screen>
   )
 }
