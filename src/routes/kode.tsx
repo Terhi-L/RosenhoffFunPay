@@ -16,7 +16,7 @@ export const Route = createFileRoute('/kode')({ component: Code })
 const CODE_LENGTH = 6
 const RESEND_SECONDS = 42
 const SMS_DELAY_MS = 2200
-const SMS_SHOWN_MS = 8000
+const SMS_SHOWN_MS = 15000
 
 function smsText(count: number, code: string) {
   if (count === 1)
