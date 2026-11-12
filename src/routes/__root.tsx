@@ -7,7 +7,6 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
-import { RegistrationProvider } from '../lib/registration'
 
 import appCss from '../styles.css?url'
 
@@ -61,7 +60,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <RegistrationProvider>{children}</RegistrationProvider>
+        {children}
         <TanStackDevtools
           config={{
             position: 'bottom-right',

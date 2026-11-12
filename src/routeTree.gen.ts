@@ -14,8 +14,8 @@ import { Route as BetalingRouteImport } from './routes/betaling'
 import { Route as FerdigRouteImport } from './routes/ferdig'
 import { Route as HylleRouteImport } from './routes/hylle'
 import { Route as KodeRouteImport } from './routes/kode'
+import { Route as KontoRouteImport } from './routes/konto'
 import { Route as ProdukterRouteImport } from './routes/produkter'
-import { Route as TelefonRouteImport } from './routes/telefon'
 import { Route as VarerRouteImport } from './routes/varer'
 
 const IndexRoute = IndexRouteImport.update({
@@ -43,14 +43,14 @@ const KodeRoute = KodeRouteImport.update({
   path: '/kode',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KontoRoute = KontoRouteImport.update({
+  id: '/konto',
+  path: '/konto',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProdukterRoute = ProdukterRouteImport.update({
   id: '/produkter',
   path: '/produkter',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TelefonRoute = TelefonRouteImport.update({
-  id: '/telefon',
-  path: '/telefon',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VarerRoute = VarerRouteImport.update({
@@ -65,8 +65,8 @@ export interface FileRoutesByFullPath {
   '/ferdig': typeof FerdigRoute
   '/hylle': typeof HylleRoute
   '/kode': typeof KodeRoute
+  '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
-  '/telefon': typeof TelefonRoute
   '/varer': typeof VarerRoute
 }
 export interface FileRoutesByTo {
@@ -75,8 +75,8 @@ export interface FileRoutesByTo {
   '/ferdig': typeof FerdigRoute
   '/hylle': typeof HylleRoute
   '/kode': typeof KodeRoute
+  '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
-  '/telefon': typeof TelefonRoute
   '/varer': typeof VarerRoute
 }
 export interface FileRoutesById {
@@ -86,8 +86,8 @@ export interface FileRoutesById {
   '/ferdig': typeof FerdigRoute
   '/hylle': typeof HylleRoute
   '/kode': typeof KodeRoute
+  '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
-  '/telefon': typeof TelefonRoute
   '/varer': typeof VarerRoute
 }
 export interface FileRouteTypes {
@@ -98,8 +98,8 @@ export interface FileRouteTypes {
     | '/ferdig'
     | '/hylle'
     | '/kode'
+    | '/konto'
     | '/produkter'
-    | '/telefon'
     | '/varer'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -108,8 +108,8 @@ export interface FileRouteTypes {
     | '/ferdig'
     | '/hylle'
     | '/kode'
+    | '/konto'
     | '/produkter'
-    | '/telefon'
     | '/varer'
   id:
     | '__root__'
@@ -118,8 +118,8 @@ export interface FileRouteTypes {
     | '/ferdig'
     | '/hylle'
     | '/kode'
+    | '/konto'
     | '/produkter'
-    | '/telefon'
     | '/varer'
   fileRoutesById: FileRoutesById
 }
@@ -129,8 +129,8 @@ export interface RootRouteChildren {
   FerdigRoute: typeof FerdigRoute
   HylleRoute: typeof HylleRoute
   KodeRoute: typeof KodeRoute
+  KontoRoute: typeof KontoRoute
   ProdukterRoute: typeof ProdukterRoute
-  TelefonRoute: typeof TelefonRoute
   VarerRoute: typeof VarerRoute
 }
 
@@ -171,18 +171,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/konto': {
+      id: '/konto'
+      path: '/konto'
+      fullPath: '/konto'
+      preLoaderRoute: typeof KontoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/produkter': {
       id: '/produkter'
       path: '/produkter'
       fullPath: '/produkter'
       preLoaderRoute: typeof ProdukterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/telefon': {
-      id: '/telefon'
-      path: '/telefon'
-      fullPath: '/telefon'
-      preLoaderRoute: typeof TelefonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/varer': {
@@ -201,8 +201,8 @@ const rootRouteChildren: RootRouteChildren = {
   FerdigRoute: FerdigRoute,
   HylleRoute: HylleRoute,
   KodeRoute: KodeRoute,
+  KontoRoute: KontoRoute,
   ProdukterRoute: ProdukterRoute,
-  TelefonRoute: TelefonRoute,
   VarerRoute: VarerRoute,
 }
 export const routeTree = rootRouteImport

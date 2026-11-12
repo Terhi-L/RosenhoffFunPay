@@ -16,7 +16,7 @@ const RESEND_SECONDS = 42
 
 function Code() {
   const navigate = useNavigate()
-  const { phone } = useRegistration()
+  const { phone } = useRegistration().account
   const [digits, setDigits] = useState<Array<string>>(
     Array(CODE_LENGTH).fill(''),
   )
@@ -45,7 +45,7 @@ function Code() {
 
   return (
     <Screen>
-      <StepHeader step={2} back="/telefon" />
+      <StepHeader step={2} back="/konto" />
       <form
         className="flex flex-1 flex-col"
         onSubmit={(event) => {
@@ -60,7 +60,7 @@ function Code() {
               {phone ? `+47 ${formatPhone(phone)}` : 'nummeret ditt'}
             </strong>
             .{' '}
-            <Link to="/telefon" className="font-bold text-navy underline">
+            <Link to="/konto" className="font-bold text-navy underline">
               Endre
             </Link>
           </StepIntro>

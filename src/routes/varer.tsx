@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { Screen, primaryButton } from '../components/Screen'
-import { ArrowLeftIcon } from '../components/icons'
+import { Screen, StepHeader, primaryButton } from '../components/Screen'
 
 export const Route = createFileRoute('/varer')({ component: Items })
 
@@ -41,23 +40,11 @@ function Items() {
 
   return (
     <Screen>
-      <nav className="flex items-center justify-between px-3 pt-3">
-        <Link
-          to="/"
-          aria-label="Tilbake"
-          className="flex size-11 items-center justify-center rounded-full text-navy"
-        >
-          <ArrowLeftIcon size={22} strokeWidth={2.2} />
-        </Link>
-        <span className="pr-3 text-sm font-bold text-navy">Steg 5 av 5</span>
-      </nav>
-      <div className="mx-6 mt-2 h-1.5 overflow-hidden rounded-full bg-sand">
-        <div className="h-full w-full bg-store" />
-      </div>
+      <StepHeader step={5} back="/" />
 
       <main className="flex flex-1 flex-col gap-[18px] px-4 pt-6">
         <div className="px-2">
-          <h1 className="m-0 font-display text-[30px] leading-[1.08] text-navy">
+          <h1 className="m-0 font-display text-[30px] leading-[1.08] text-plum">
             Registrer varene i kurven
           </h1>
           <p className="mt-2 text-[15px] leading-[1.45] text-muted">
@@ -99,7 +86,7 @@ function Items() {
               {MESSAGES[Math.min(tries, MESSAGES.length) - 1]}
             </span>
           </div>
-          <p className="absolute bottom-3.5 m-0 text-[13px] text-sand">
+          <p className="absolute bottom-3.5 m-0 text-[13px] text-line">
             Forsøk {tries} av ∞
           </p>
         </div>
@@ -107,12 +94,12 @@ function Items() {
         <button
           type="button"
           onClick={() => setTries(tries + 1)}
-          className="min-h-[52px] rounded-2xl border-2 border-navy bg-white text-base font-bold text-navy"
+          className="min-h-[52px] rounded-2xl border-2 border-plum bg-white text-base font-bold text-plum"
         >
           Prøv å skanne igjen
         </button>
 
-        <p className="m-0 flex items-center gap-3 rounded-2xl border border-sand bg-white px-4 py-3.5 text-sm leading-[1.45]">
+        <p className="m-0 flex items-center gap-3 rounded-2xl border border-line bg-white px-4 py-3.5 text-sm leading-[1.45]">
           <span className="flex size-11 flex-none items-center justify-center rounded-xl bg-[#3fa9de] text-ink">
             <svg
               width="22"

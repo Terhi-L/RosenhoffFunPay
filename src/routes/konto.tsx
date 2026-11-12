@@ -8,7 +8,7 @@ import {
 } from '../components/Screen'
 import { formatPhone, useRegistration } from '../lib/registration'
 
-export const Route = createFileRoute('/telefon')({ component: Phone })
+export const Route = createFileRoute('/konto')({ component: Phone })
 
 const checkbox = 'm-0 size-[22px] flex-none accent-store'
 const checkboxLabel =
@@ -16,7 +16,9 @@ const checkboxLabel =
 
 function Phone() {
   const navigate = useNavigate()
-  const { phone, setPhone } = useRegistration()
+  const { account, setAccount } = useRegistration()
+  const phone = account.phone
+  const setPhone = (digits: string) => setAccount({ ...account, phone: digits })
   const [terms, setTerms] = useState(false)
 
   return (

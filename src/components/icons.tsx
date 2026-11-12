@@ -118,3 +118,49 @@ export function PinIcon(props: IconProps) {
     </Stroke>
   )
 }
+
+export function CloseIcon(props: IconProps) {
+  return (
+    <Stroke {...props}>
+      <path d="M6 6l12 12M18 6L6 18" />
+    </Stroke>
+  )
+}
+
+export function InfoIcon(props: IconProps) {
+  return (
+    <Stroke {...props}>
+      <circle cx="12" cy="12" r="9.5" />
+      <path d="M12 11v6M12 7.5v.01" />
+    </Stroke>
+  )
+}
+
+export function HomeIcon(props: IconProps) {
+  return (
+    <Stroke {...props}>
+      <path d="M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6" />
+    </Stroke>
+  )
+}
+
+/** The Norway Americana orange slice. Full colour, decorative. */
+export function OrangeSliceIcon({ size = 24, className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={className}
+    >
+      <circle cx="12" cy="12" r="11" fill="#F28C28" />
+      <circle cx="12" cy="12" r="8.5" fill="#FFC66B" />
+      <path
+        d="M3.5 12h17M12 3.5v17M6 6l12 12M18 6L6 18"
+        stroke="#F28C28"
+        strokeWidth="1.6"
+      />
+    </svg>
+  )
+}

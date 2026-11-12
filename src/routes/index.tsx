@@ -88,13 +88,13 @@ function Welcome() {
       </ol>
 
       <div className="mt-auto flex flex-col gap-3 px-4 pt-4 pb-8">
-        <Link to="/telefon" className={primaryButton}>
+        <Link to="/konto" className={primaryButton}>
           Registrer deg for hurtigkasse
           <ArrowRightIcon size={18} strokeWidth={2.4} />
         </Link>
         <p className="m-0 text-center text-sm text-muted">
           Tar under ett minutt ·{' '}
-          <Link to="/telefon" className="font-bold text-navy underline">
+          <Link to="/konto" className="font-bold text-navy underline">
             Jeg har allerede konto
           </Link>
         </p>
