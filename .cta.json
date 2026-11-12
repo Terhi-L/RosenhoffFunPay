@@ -1,0 +1,22 @@
+{
+  "projectName": "rosenhoff-funpay",
+  "mode": "file-router",
+  "bundler": "vite",
+  "typescript": true,
+  "tailwind": true,
+  "packageManager": "npm",
+  "git": false,
+  "install": false,
+  "intent": false,
+  "addOnOptions": {},
+  "projectPreset": "default",
+  "routerOnly": false,
+  "includeExamples": false,
+  "version": 1,
+  "framework": "react",
+  "chosenAddOns": [
+    "tanstack-query",
+    "form",
+    "eslint"
+  ]
+}
