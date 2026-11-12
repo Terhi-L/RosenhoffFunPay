@@ -88,7 +88,7 @@ function Payment() {
               <span>{formatNok(subtotal)}</span>
             </div>
             <div className="flex justify-between gap-3 font-bold text-alert">
-              <span>Premiumtillegg (lykkehjulet)</span>
+              <span>Appgebyr (lykkehjulet)</span>
               <span>+{checkout.surchargePct} %</span>
             </div>
             <div className="my-1 h-px bg-line" />

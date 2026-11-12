@@ -40,7 +40,7 @@ export function Wheel({
             style={{ transform: `rotate(${segmentCentre(index)}deg)` }}
           >
             <span
-              className="absolute top-[18%] left-1/2 -translate-1/2 font-display text-lg whitespace-nowrap"
+              className={`absolute left-1/2 -translate-1/2 font-display whitespace-nowrap ${segment.size < 30 ? 'top-[16%] -rotate-90 text-[11px]' : 'top-[18%] text-lg'}`}
               style={{ color: segment.text }}
             >
               {segment.label}

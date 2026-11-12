@@ -55,9 +55,9 @@ function WheelPage() {
         <div aria-live="polite" className="self-stretch">
           {done && (
             <div className="rounded-2xl bg-ink px-4 py-3.5 text-white">
-              <p className="m-0 text-[13px] font-bold text-sun">Gratulerer!</p>
+              <p className="m-0 text-[13px] font-bold text-sun">Dessverre!</p>
               <p className="mt-1 mb-0 text-[17px] font-bold">
-                Du vant +15 % premiumtillegg.
+                Du er tilfeldig valgt til å betale et lite appgebyr (+15 %).
               </p>
               <p className="mt-1 mb-0 text-[13px] text-line">
                 Hjulet er helt tilfeldig. Ifølge hjulet.
