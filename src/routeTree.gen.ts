@@ -17,6 +17,7 @@ import { Route as KodeRouteImport } from './routes/kode'
 import { Route as KontoRouteImport } from './routes/konto'
 import { Route as ProdukterRouteImport } from './routes/produkter'
 import { Route as UtsolgtRouteImport } from './routes/utsolgt'
+import { Route as VarerRouteImport } from './routes/varer'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,6 +59,11 @@ const UtsolgtRoute = UtsolgtRouteImport.update({
   path: '/utsolgt',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VarerRoute = VarerRouteImport.update({
+  id: '/varer',
+  path: '/varer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
   '/utsolgt': typeof UtsolgtRoute
+  '/varer': typeof VarerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
   '/utsolgt': typeof UtsolgtRoute
+  '/varer': typeof VarerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
   '/utsolgt': typeof UtsolgtRoute
+  '/varer': typeof VarerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/konto'
     | '/produkter'
     | '/utsolgt'
+    | '/varer'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/konto'
     | '/produkter'
     | '/utsolgt'
+    | '/varer'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/konto'
     | '/produkter'
     | '/utsolgt'
+    | '/varer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   KontoRoute: typeof KontoRoute
   ProdukterRoute: typeof ProdukterRoute
   UtsolgtRoute: typeof UtsolgtRoute
+  VarerRoute: typeof VarerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UtsolgtRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/varer': {
+      id: '/varer'
+      path: '/varer'
+      fullPath: '/varer'
+      preLoaderRoute: typeof VarerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   KontoRoute: KontoRoute,
   ProdukterRoute: ProdukterRoute,
   UtsolgtRoute: UtsolgtRoute,
+  VarerRoute: VarerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
