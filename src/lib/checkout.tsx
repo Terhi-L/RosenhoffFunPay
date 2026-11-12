@@ -1,6 +1,6 @@
 import { useBasket } from './basket'
 import { demoBasket } from './demoBasket'
-import { createSessionStore } from './store'
+import { createStore } from './store'
 
 export interface Checkout {
   wheelSpun: boolean
@@ -14,7 +14,7 @@ const initialCheckout: Checkout = {
   soldOutSlug: null,
 }
 
-const checkoutStore = createSessionStore('checkout', initialCheckout)
+const checkoutStore = createStore(initialCheckout)
 
 function setCheckout(patch: Partial<Checkout>) {
   checkoutStore.set((checkout) => ({ ...checkout, ...patch }))
