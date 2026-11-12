@@ -11,11 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BetalingRouteImport } from './routes/betaling'
-import { Route as FerdigRouteImport } from './routes/ferdig'
+import { Route as HjulRouteImport } from './routes/hjul'
 import { Route as HylleRouteImport } from './routes/hylle'
 import { Route as KodeRouteImport } from './routes/kode'
 import { Route as KontoRouteImport } from './routes/konto'
 import { Route as ProdukterRouteImport } from './routes/produkter'
+import { Route as UtsolgtRouteImport } from './routes/utsolgt'
 import { Route as VarerRouteImport } from './routes/varer'
 
 const IndexRoute = IndexRouteImport.update({
@@ -28,9 +29,9 @@ const BetalingRoute = BetalingRouteImport.update({
   path: '/betaling',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FerdigRoute = FerdigRouteImport.update({
-  id: '/ferdig',
-  path: '/ferdig',
+const HjulRoute = HjulRouteImport.update({
+  id: '/hjul',
+  path: '/hjul',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HylleRoute = HylleRouteImport.update({
@@ -53,6 +54,11 @@ const ProdukterRoute = ProdukterRouteImport.update({
   path: '/produkter',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UtsolgtRoute = UtsolgtRouteImport.update({
+  id: '/utsolgt',
+  path: '/utsolgt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VarerRoute = VarerRouteImport.update({
   id: '/varer',
   path: '/varer',
@@ -62,32 +68,35 @@ const VarerRoute = VarerRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/betaling': typeof BetalingRoute
-  '/ferdig': typeof FerdigRoute
+  '/hjul': typeof HjulRoute
   '/hylle': typeof HylleRoute
   '/kode': typeof KodeRoute
   '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
+  '/utsolgt': typeof UtsolgtRoute
   '/varer': typeof VarerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/betaling': typeof BetalingRoute
-  '/ferdig': typeof FerdigRoute
+  '/hjul': typeof HjulRoute
   '/hylle': typeof HylleRoute
   '/kode': typeof KodeRoute
   '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
+  '/utsolgt': typeof UtsolgtRoute
   '/varer': typeof VarerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/betaling': typeof BetalingRoute
-  '/ferdig': typeof FerdigRoute
+  '/hjul': typeof HjulRoute
   '/hylle': typeof HylleRoute
   '/kode': typeof KodeRoute
   '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
+  '/utsolgt': typeof UtsolgtRoute
   '/varer': typeof VarerRoute
 }
 export interface FileRouteTypes {
@@ -95,42 +104,46 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/betaling'
-    | '/ferdig'
+    | '/hjul'
     | '/hylle'
     | '/kode'
     | '/konto'
     | '/produkter'
+    | '/utsolgt'
     | '/varer'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/betaling'
-    | '/ferdig'
+    | '/hjul'
     | '/hylle'
     | '/kode'
     | '/konto'
     | '/produkter'
+    | '/utsolgt'
     | '/varer'
   id:
     | '__root__'
     | '/'
     | '/betaling'
-    | '/ferdig'
+    | '/hjul'
     | '/hylle'
     | '/kode'
     | '/konto'
     | '/produkter'
+    | '/utsolgt'
     | '/varer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BetalingRoute: typeof BetalingRoute
-  FerdigRoute: typeof FerdigRoute
+  HjulRoute: typeof HjulRoute
   HylleRoute: typeof HylleRoute
   KodeRoute: typeof KodeRoute
   KontoRoute: typeof KontoRoute
   ProdukterRoute: typeof ProdukterRoute
+  UtsolgtRoute: typeof UtsolgtRoute
   VarerRoute: typeof VarerRoute
 }
 
@@ -150,11 +163,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BetalingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ferdig': {
-      id: '/ferdig'
-      path: '/ferdig'
-      fullPath: '/ferdig'
-      preLoaderRoute: typeof FerdigRouteImport
+    '/hjul': {
+      id: '/hjul'
+      path: '/hjul'
+      fullPath: '/hjul'
+      preLoaderRoute: typeof HjulRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hylle': {
@@ -185,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProdukterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/utsolgt': {
+      id: '/utsolgt'
+      path: '/utsolgt'
+      fullPath: '/utsolgt'
+      preLoaderRoute: typeof UtsolgtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/varer': {
       id: '/varer'
       path: '/varer'
@@ -198,11 +218,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BetalingRoute: BetalingRoute,
-  FerdigRoute: FerdigRoute,
+  HjulRoute: HjulRoute,
   HylleRoute: HylleRoute,
   KodeRoute: KodeRoute,
   KontoRoute: KontoRoute,
   ProdukterRoute: ProdukterRoute,
+  UtsolgtRoute: UtsolgtRoute,
   VarerRoute: VarerRoute,
 }
 export const routeTree = rootRouteImport

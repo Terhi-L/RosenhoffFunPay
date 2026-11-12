@@ -206,7 +206,7 @@ function Shelf() {
           <br />
           <span className="text-muted">4 i kurven</span>
         </div>
-        <Link to="/betaling" className={`${primaryButton} !w-auto px-6`}>
+        <Link to="/hjul" className={`${primaryButton} !w-auto px-6`}>
           Til betaling
         </Link>
       </div>
