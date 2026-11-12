@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Screen, primaryButton } from '../components/Screen'
+import logo from '../assets/logo.webp'
 import {
   ArrowRightIcon,
   CardIcon,
@@ -31,6 +32,13 @@ const steps = [
 function Welcome() {
   return (
     <Screen>
+      <div className="flex justify-center bg-[#241f21] py-3">
+        <img
+          src={logo}
+          alt="Rosenhoff Dagligvare – Stort utvalg!"
+          className="h-32 w-auto"
+        />
+      </div>
       <header className="flex items-center justify-between px-6 pt-5 pb-3">
         <div className="flex items-center gap-2">
           <StarIcon className="text-flag" />
