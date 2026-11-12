@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Screen, StepHeader, primaryButton } from '../components/Screen'
+import { useProfile } from '../lib/registration'
+import type { CustomerType } from '../lib/registration'
 
 export const Route = createFileRoute('/varer')({ component: Items })
 
@@ -28,7 +30,7 @@ const keyframes = `
 @keyframes pop { 0% { transform: scale(0.9); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
 `
 
-function Items() {
+function Scanner() {
   const [tries, setTries] = useState(1)
   const [scanning, setScanning] = useState(false)
   const [sighting, setSighting] = useState<(typeof SIGHTINGS)[number] | null>(
@@ -199,5 +201,101 @@ function Items() {
         </Link>
       </div>
     </Screen>
+  )
+}
+
+const TYPE_LABELS: Record<CustomerType, string> = {
+  snacksjeger: 'snacksjeger',
+  hjemlengsel: 'hjemlengsel',
+  pro: 'Pro-kunde',
+}
+
+/** Scanning is for Pro customers only. Everyone else picks from the shelf. */
+function ProOnly({ customerType }: { customerType: CustomerType | null }) {
+  return (
+    <Screen>
+      <StepHeader step={5} back="/kundetype" />
+
+      <main className="flex flex-1 flex-col gap-[18px] px-4 pt-6">
+        <div className="px-2">
+          <h1 className="m-0 font-display text-[30px] leading-[1.08] text-plum">
+            Registrer varene i kurven
+          </h1>
+          <p className="mt-2 text-[15px] leading-[1.45] text-muted">
+            Skanning er forbeholdt Pro-kunder.
+            {customerType
+              ? ` Du er registrert som ${TYPE_LABELS[customerType]}. Det er ikke det samme.`
+              : ' Du har ikke sagt hva slags kunde du er. Det er ikke det samme.'}
+          </p>
+        </div>
+
+        <div className="flex h-[260px] flex-none flex-col items-center justify-center gap-3 rounded-[20px] bg-ink px-8 text-center text-white">
+          <svg
+            width="44"
+            height="44"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="4" y="11" width="16" height="10" rx="2" />
+            <path d="M8 11V8a4 4 0 0 1 8 0v3M12 15v2" />
+          </svg>
+          <p className="m-0 font-display text-[22px] leading-[1.15] text-sun">
+            Skanneren er kun for Pro-kunder
+          </p>
+          <p className="m-0 text-sm leading-[1.4] text-line">
+            Kiosk, kafé, forening, fest eller storfamilie.
+          </p>
+        </div>
+
+        <Link
+          to="/kundetype"
+          className="flex min-h-[52px] items-center justify-center rounded-2xl border-2 border-plum bg-white text-base font-bold text-plum no-underline"
+        >
+          Bli Pro-kunde
+        </Link>
+
+        <p className="m-0 flex items-center gap-3 rounded-2xl border border-line bg-white px-4 py-3.5 text-sm leading-[1.45]">
+          <span className="flex size-11 flex-none items-center justify-center rounded-xl bg-sky text-ink">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 6h18M3 12h18M3 18h18M7 3v18M17 3v18" />
+            </svg>
+          </span>
+          <span>
+            <strong>Tips:</strong> Finn varene på hylla i appen. Den er bygget
+            akkurat som butikken.
+          </span>
+        </p>
+      </main>
+
+      <div className="px-4 pt-3 pb-8">
+        <Link to="/hylle" className={primaryButton}>
+          Finn varene på hylla
+        </Link>
+      </div>
+    </Screen>
+  )
+}
+
+function Items() {
+  const { profile } = useProfile()
+  return profile.customerType === 'pro' ? (
+    <Scanner />
+  ) : (
+    <ProOnly customerType={profile.customerType} />
   )
 }
