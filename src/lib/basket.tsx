@@ -57,6 +57,6 @@ export function useBasket() {
     remove,
     count: items.reduce((sum, item) => sum + item.qty, 0),
     subtotal: items.reduce((sum, item) => sum + item.price * item.qty, 0),
-    physicalCount: 4,
+    physicalCount: 1,
   }
 }

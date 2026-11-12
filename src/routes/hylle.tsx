@@ -63,7 +63,7 @@ function Shelf() {
 
   const [query, setQuery] = useState('')
   const target = useMemo(() => findProduct(aisles, query), [aisles, query])
-  const { items, add, remove } = useBasket()
+  const { items, add, remove, physicalCount } = useBasket()
   const picked = useMemo(() => new Set(items.map((item) => item.slug)), [items])
   const [distance, setDistance] = useState<number | null>(null)
   const scroller = useRef<HTMLDivElement>(null)
@@ -287,7 +287,7 @@ function Shelf() {
         <div className="flex-1 text-sm leading-[1.3]">
           <strong className="text-base">{picked.size} registrert</strong>
           <br />
-          <span className="text-muted">4 i kurven</span>
+          <span className="text-muted">{physicalCount} i kurven</span>
         </div>
         <Link to="/hjul" className={`${primaryButton} !w-auto px-6`}>
           Til betaling

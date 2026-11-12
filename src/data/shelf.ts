@@ -1,4 +1,5 @@
 // The store model for /hylle: pure functions over the product catalogue, no UI.
+import helmelk from '../assets/helmelk.webp'
 
 export interface CatalogProduct {
   slug: string
@@ -41,14 +42,14 @@ export const MILK_PRICE = 24
 
 export const MILK: ShelfProduct = {
   slug: 'melk',
-  name: 'Melk 1 l',
+  name: 'Helmelk 1 l',
   price: MILK_PRICE,
-  image: null,
+  image: helmelk,
   inStock: true,
   accent: '#1f74a8',
 }
 
-/** Fresh bread isn't in the catalogue either. The demo buys bread and milk. TODO: real price. */
+/** Fresh bread isn't in the catalogue either. TODO: real price. */
 export const BREAD_PRICE = 39
 export const BREAD: ShelfProduct = {
   slug: 'brod',

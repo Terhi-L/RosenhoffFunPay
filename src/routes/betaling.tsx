@@ -1,28 +1,10 @@
 import { useEffect, useState } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
-import { z } from 'zod'
 import { Screen, StepHeader, primaryButton } from '../components/Screen'
-import {
-  expiryError,
-  formatCardNumber,
-  formatExpiry,
-  isValidCardNumber,
-} from '../lib/card'
 import { formatNok, useCheckout, useCheckoutItems } from '../lib/checkout'
 
 export const Route = createFileRoute('/betaling')({ component: Payment })
-
-const cardSchema = z.object({
-  number: z
-    .string()
-    .refine(isValidCardNumber, 'Skriv inn et gyldig kortnummer.'),
-  expiry: z.string().superRefine((value, context) => {
-    const message = expiryError(value)
-    if (message) context.addIssue({ code: 'custom', message })
-  }),
-  cvc: z.string().regex(/^\d{3}$/, 'CVC er 3 siffer.'),
-})
 
 const PROCESSING_LINES = [
   'Kontakter butikken…',
@@ -35,7 +17,6 @@ const LINE_MS = 800
 const label = 'text-sm font-bold'
 const input =
   'h-[54px] min-w-0 rounded-[14px] border-2 bg-white px-3.5 text-[17px] font-semibold text-ink outline-none placeholder:font-normal placeholder:text-muted focus:border-plum'
-const errorText = 'm-0 text-[13px] font-bold text-alert'
 
 function Payment() {
   const navigate = useNavigate()
@@ -47,7 +28,6 @@ function Payment() {
 
   const form = useForm({
     defaultValues: { number: '', expiry: '', cvc: '' },
-    validators: { onSubmit: cardSchema },
     onSubmit: () => setLine(0),
   })
 
@@ -99,106 +79,64 @@ function Payment() {
           </div>
 
           <form.Field name="number">
-            {(field) => {
-              const error = field.state.meta.errors[0]?.message
-              return (
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="kort" className={label}>
-                    Kortnummer
-                  </label>
-                  <input
-                    id="kort"
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="cc-number"
-                    placeholder="0000 0000 0000 0000"
-                    value={field.state.value}
-                    onChange={(event) =>
-                      field.handleChange(formatCardNumber(event.target.value))
-                    }
-                    onBlur={field.handleBlur}
-                    aria-invalid={Boolean(error)}
-                    aria-describedby="kort-hjelp"
-                    className={`${input} ${error ? 'border-alert' : 'border-line-strong'}`}
-                  />
-                  <div id="kort-hjelp" className="flex flex-col gap-1">
-                    {error && <p className={errorText}>{error}</p>}
-                    <p className="m-0 text-[13px] text-muted">
-                      Testkort: 4925 0000 0000 0004
-                    </p>
-                  </div>
-                </div>
-              )
-            }}
+            {(field) => (
+              <div className="flex flex-col gap-2">
+                <label htmlFor="kort" className={label}>
+                  Kortnummer
+                </label>
+                <input
+                  id="kort"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="cc-number"
+                  placeholder="0000 0000 0000 0000"
+                  value={field.state.value}
+                  onChange={(event) => field.handleChange(event.target.value)}
+                  className={`${input} border-line-strong`}
+                />
+              </div>
+            )}
           </form.Field>
 
           <div className="grid grid-cols-2 gap-3">
             <form.Field name="expiry">
-              {(field) => {
-                const error = field.state.meta.errors[0]?.message
-                return (
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="utlop" className={label}>
-                      Utløpsdato
-                    </label>
-                    <input
-                      id="utlop"
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="cc-exp"
-                      placeholder="MM / ÅÅ"
-                      value={field.state.value}
-                      onChange={(event) =>
-                        field.handleChange(formatExpiry(event.target.value))
-                      }
-                      onBlur={field.handleBlur}
-                      aria-invalid={Boolean(error)}
-                      aria-describedby={error ? 'utlop-feil' : undefined}
-                      className={`${input} ${error ? 'border-alert' : 'border-line-strong'}`}
-                    />
-                    {error && (
-                      <p id="utlop-feil" className={errorText}>
-                        {error}
-                      </p>
-                    )}
-                  </div>
-                )
-              }}
+              {(field) => (
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="utlop" className={label}>
+                    Utløpsdato
+                  </label>
+                  <input
+                    id="utlop"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="cc-exp"
+                    placeholder="MM / ÅÅ"
+                    value={field.state.value}
+                    onChange={(event) => field.handleChange(event.target.value)}
+                    className={`${input} border-line-strong`}
+                  />
+                </div>
+              )}
             </form.Field>
 
             <form.Field name="cvc">
-              {(field) => {
-                const error = field.state.meta.errors[0]?.message
-                return (
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="cvc" className={label}>
-                      CVC
-                    </label>
-                    <input
-                      id="cvc"
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="cc-csc"
-                      placeholder="123"
-                      value={field.state.value}
-                      onChange={(event) =>
-                        field.handleChange(
-                          event.target.value.replace(/\D/g, '').slice(0, 3),
-                        )
-                      }
-                      onBlur={field.handleBlur}
-                      aria-invalid={Boolean(error)}
-                      aria-describedby={error ? 'cvc-feil' : undefined}
-                      className={`${input} ${error ? 'border-alert' : 'border-line-strong'}`}
-                    />
-                    {error && (
-                      <p id="cvc-feil" className={errorText}>
-                        {error}
-                      </p>
-                    )}
-                  </div>
-                )
-              }}
+              {(field) => (
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="cvc" className={label}>
+                    CVC
+                  </label>
+                  <input
+                    id="cvc"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="cc-csc"
+                    placeholder="123"
+                    value={field.state.value}
+                    onChange={(event) => field.handleChange(event.target.value)}
+                    className={`${input} border-line-strong`}
+                  />
+                </div>
+              )}
             </form.Field>
           </div>
 
