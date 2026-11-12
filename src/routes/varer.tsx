@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Screen, primaryButton } from '../components/Screen'
 import { ArrowLeftIcon } from '../components/icons'
@@ -16,6 +16,28 @@ const MESSAGES = [
 
 function Items() {
   const [tries, setTries] = useState(1)
+  const video = useRef<HTMLVideoElement>(null)
+
+  // Open the real camera so it looks like it should work. Nothing is ever
+  // read from it. No camera or no permission just leaves the dark box.
+  useEffect(() => {
+    // mediaDevices is missing outside secure contexts
+    if (!('mediaDevices' in navigator)) return
+    let stream: MediaStream | undefined
+    let cancelled = false
+    navigator.mediaDevices
+      .getUserMedia({ video: { facingMode: 'environment' } })
+      .then((media) => {
+        if (cancelled) return media.getTracks().forEach((track) => track.stop())
+        stream = media
+        if (video.current) video.current.srcObject = media
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+      stream?.getTracks().forEach((track) => track.stop())
+    }
+  }, [])
 
   return (
     <Screen>
@@ -45,7 +67,15 @@ function Items() {
         </div>
 
         <div className="relative flex h-[260px] flex-none items-center justify-center overflow-hidden rounded-[20px] bg-ink">
-          <div className="h-[120px] w-60 rounded-[14px] border-[3px] border-dashed border-white/55" />
+          <video
+            ref={video}
+            autoPlay
+            muted
+            playsInline
+            aria-hidden="true"
+            className="absolute inset-0 size-full object-cover"
+          />
+          <div className="relative h-[120px] w-60 rounded-[14px] border-[3px] border-dashed border-white/55" />
           <div className="absolute inset-x-4 top-4 flex items-center gap-2.5 rounded-xl bg-[#fff4d6] px-3 py-2.5 text-[#5a4300]">
             <svg
               width="22"
