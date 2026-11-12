@@ -1,5 +1,18 @@
+@import 'tailwindcss';
 
-@import "tailwindcss";
+@theme {
+  --font-sans: 'Archivo', Helvetica, Arial, sans-serif;
+  --font-display: 'Archivo Black', 'Archivo', sans-serif;
+  --color-cream: #fbf6ea;
+  --color-ink: #14181f;
+  --color-muted: #5b6470;
+  --color-flag: #c8102e;
+  --color-navy: #13294b;
+  --color-store: #0e6b4f;
+  --color-mustard: #f5c518;
+  --color-sand: #e8e0cc;
+  --color-sand-dark: #d9cfb6;
+}
 
 * {
   box-sizing: border-box;
@@ -13,5 +26,5 @@ body,
 
 body {
   margin: 0;
+  background: var(--color-sand);
 }
-
