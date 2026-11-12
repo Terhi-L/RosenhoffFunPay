@@ -1,106 +1,106 @@
+import { useEffect } from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Screen, primaryButton } from '../components/Screen'
-import logo from '../assets/logo.webp'
+import { Slogan } from '../components/Slogan'
+import { FruitIllustration } from '../components/FruitIllustration'
 import {
   ArrowRightIcon,
   CardIcon,
   ExitIcon,
+  OrangeSliceIcon,
   ScanIcon,
-  StarIcon,
 } from '../components/icons'
+import { clearSessionStores } from '../lib/store'
 
 export const Route = createFileRoute('/')({ component: Welcome })
 
 const steps = [
   {
     icon: ScanIcon,
-    title: 'Skann strekkoden',
-    text: "Fra Reese's Puffs til Lucky Charms",
+    color: 'bg-orange-deep',
+    title: 'Lag en konto',
+    text: 'Og fortell oss litt om deg selv',
   },
   {
     icon: CardIcon,
-    title: 'Betal i appen',
-    text: 'Kort eller Vipps, lagret trygt',
+    color: 'bg-grape',
+    title: 'Plukk varene i appen',
+    text: 'Akkurat som i butikken, bare på mobilen',
   },
   {
     icon: ExitIcon,
-    title: 'Gå rett ut',
-    text: 'Vis kvitteringen ved døra',
+    color: 'bg-melon-deep',
+    title: 'Betal og gå',
+    text: 'Hvis alt går som det skal',
   },
 ]
 
 function Welcome() {
+  // Open /?reset=1 before a demo run to forget everything from the last one.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has('reset')) {
+      clearSessionStores()
+      window.location.replace('/')
+    }
+  }, [])
+
   return (
     <Screen>
-      <div className="flex justify-center bg-[#241f21] py-3">
-        <img
-          src={logo}
-          alt="Rosenhoff Dagligvare – Stort utvalg!"
-          className="h-32 w-auto"
-        />
-      </div>
-      <header className="flex items-center justify-between px-6 pt-5 pb-3">
+      <header className="flex items-center justify-between px-6 pt-[18px] pb-1.5">
         <div className="flex items-center gap-2">
-          <StarIcon className="text-flag" />
-          <span className="font-display text-[17px] tracking-[0.02em] text-navy">
+          <OrangeSliceIcon />
+          <span className="font-display text-[17px] tracking-[0.02em] text-plum">
             NORWAY AMERICANA
           </span>
         </div>
-        <span className="rounded-full bg-mustard px-2 py-1 text-xs font-bold text-navy">
-          9–23
+        <span className="rounded-full bg-sun px-[9px] py-1 text-xs font-bold text-ink">
+          Alle dager 9–23
         </span>
       </header>
-      <p className="mx-6 mb-3 origin-left -rotate-2 font-display text-[26px] leading-[1.1] text-flag">
-        Vi gjør handelen gøy!
-      </p>
 
-      <section className="relative mx-4 mt-2 overflow-hidden rounded-[20px] bg-store px-6 pt-7 pb-6 text-white">
-        <StarIcon
-          size={160}
-          className="absolute -top-9 -right-9 text-white opacity-[0.12]"
-        />
-        <p className="mb-2.5 text-[13px] font-bold tracking-[0.08em] text-mustard uppercase">
-          Nyhet: hurtigkasse
+      <Slogan className="mx-6 mt-1.5 mb-3.5 origin-left -rotate-2 text-[28px]" />
+
+      <section className="mx-4 flex flex-col overflow-hidden rounded-3xl bg-leaf px-[22px] pt-6 text-white">
+        <p className="m-0 mb-2.5 self-start rounded-full bg-white px-2.5 py-1 text-xs font-bold tracking-[0.08em] text-ink uppercase">
+          Nyhet i butikken
         </p>
-        <h1 className="m-0 font-display text-[40px] leading-[1.02] tracking-[-0.01em]">
-          Hopp over køen.
+        <h1 className="m-0 font-display text-[42px] leading-[1.02] text-sun [text-shadow:3px_3px_0_var(--color-leaf-dark)]">
+          Kassa er lagt ned.
         </h1>
-        <p className="mt-3.5 text-base leading-[1.45] text-[#e6f2ec]">
-          Skann varene mens du handler, betal på mobilen og gå rett ut.
+        <p className="mt-3 mb-0 text-base leading-[1.45]">
+          Ikke tenk på det. Appen vår gjør alt kassa gjorde. Nesten.
         </p>
+        <FruitIllustration className="-mx-1.5 mt-2.5 -mb-1.5 block" />
       </section>
 
-      <ol className="mx-4 mt-6 flex list-none flex-col gap-3 p-0">
-        {steps.map(({ icon: Icon, title, text }) => (
+      <ol className="mx-4 mt-[18px] mb-0 flex list-none flex-col gap-2.5 p-0">
+        {steps.map(({ icon: Icon, color, title, text }) => (
           <li
             key={title}
-            className="flex items-center gap-3.5 rounded-[14px] border border-sand bg-white px-4 py-3.5"
+            className="flex items-center gap-3.5 rounded-2xl border border-line bg-white px-4 py-3"
           >
-            <span className="flex size-10 flex-none items-center justify-center rounded-full bg-navy text-white">
+            <span
+              className={`flex size-10 flex-none items-center justify-center rounded-full text-white ${color}`}
+            >
               <Icon />
             </span>
             <div>
               <p className="m-0 text-base font-bold">{title}</p>
-              <p className="mt-0.5 text-sm text-muted">{text}</p>
+              <p className="mt-0.5 mb-0 text-sm text-muted">{text}</p>
             </div>
           </li>
         ))}
       </ol>
 
-      <div className="mt-auto flex flex-col gap-3 px-4 pt-4 pb-8">
+      <div className="mt-auto flex flex-col gap-3 px-4 pt-3.5 pb-[30px]">
         <Link to="/konto" className={primaryButton}>
-          Registrer deg for hurtigkasse
+          Last ned appen og registrer deg
           <ArrowRightIcon size={18} strokeWidth={2.4} />
         </Link>
         <p className="m-0 text-center text-sm text-muted">
-          Tar under ett minutt ·{' '}
-          <Link to="/konto" className="font-bold text-navy underline">
+          Tar bare noen minutter ·{' '}
+          <Link to="/konto" className="font-bold text-plum underline">
             Jeg har allerede konto
-          </Link>
-        </p>
-        <p className="m-0 text-center text-sm">
-          <Link to="/produkter" className="font-bold text-navy underline">
-            Se produktene våre
           </Link>
         </p>
       </div>

@@ -50,7 +50,7 @@ function Code() {
         className="flex flex-1 flex-col"
         onSubmit={(event) => {
           event.preventDefault()
-          navigate({ to: '/betaling' })
+          navigate({ to: '/smak', search: { nabo: 1 } })
         }}
       >
         <main className="flex flex-col gap-7 px-6 pt-8">
@@ -60,7 +60,7 @@ function Code() {
               {phone ? `+47 ${formatPhone(phone)}` : 'nummeret ditt'}
             </strong>
             .{' '}
-            <Link to="/konto" className="font-bold text-navy underline">
+            <Link to="/konto" className="font-bold text-plum underline">
               Endre
             </Link>
           </StepIntro>
@@ -90,7 +90,7 @@ function Code() {
                     }
                   }}
                   onFocus={(event) => event.target.select()}
-                  className={`h-[60px] min-w-0 rounded-xl border-2 bg-white text-center text-[26px] font-bold text-navy outline-none focus:border-flag focus:shadow-[0_0_0_4px_rgba(200,16,46,0.15)] ${digit ? 'border-navy' : 'border-sand-dark'}`}
+                  className={`h-[60px] min-w-0 rounded-xl border-2 bg-white text-center font-sans text-[26px] font-bold text-plum outline-none focus:border-orange focus:shadow-[0_0_0_4px_rgba(242,140,40,0.25)] ${digit ? 'border-plum' : 'border-line-strong'}`}
                 />
               ))}
             </div>
@@ -106,7 +106,7 @@ function Code() {
                 <button
                   type="button"
                   onClick={() => setSecondsLeft(RESEND_SECONDS)}
-                  className="cursor-pointer border-0 bg-transparent p-0 font-bold text-navy underline"
+                  className="cursor-pointer border-0 bg-transparent p-0 font-sans text-sm font-bold text-plum underline"
                 >
                   Send ny kode
                 </button>

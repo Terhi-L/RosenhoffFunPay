@@ -15,7 +15,9 @@ import { Route as HjulRouteImport } from './routes/hjul'
 import { Route as HylleRouteImport } from './routes/hylle'
 import { Route as KodeRouteImport } from './routes/kode'
 import { Route as KontoRouteImport } from './routes/konto'
+import { Route as KundetypeRouteImport } from './routes/kundetype'
 import { Route as ProdukterRouteImport } from './routes/produkter'
+import { Route as SmakRouteImport } from './routes/smak'
 import { Route as UtsolgtRouteImport } from './routes/utsolgt'
 import { Route as VarerRouteImport } from './routes/varer'
 
@@ -49,9 +51,19 @@ const KontoRoute = KontoRouteImport.update({
   path: '/konto',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KundetypeRoute = KundetypeRouteImport.update({
+  id: '/kundetype',
+  path: '/kundetype',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProdukterRoute = ProdukterRouteImport.update({
   id: '/produkter',
   path: '/produkter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SmakRoute = SmakRouteImport.update({
+  id: '/smak',
+  path: '/smak',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UtsolgtRoute = UtsolgtRouteImport.update({
@@ -72,7 +84,9 @@ export interface FileRoutesByFullPath {
   '/hylle': typeof HylleRoute
   '/kode': typeof KodeRoute
   '/konto': typeof KontoRoute
+  '/kundetype': typeof KundetypeRoute
   '/produkter': typeof ProdukterRoute
+  '/smak': typeof SmakRoute
   '/utsolgt': typeof UtsolgtRoute
   '/varer': typeof VarerRoute
 }
@@ -83,7 +97,9 @@ export interface FileRoutesByTo {
   '/hylle': typeof HylleRoute
   '/kode': typeof KodeRoute
   '/konto': typeof KontoRoute
+  '/kundetype': typeof KundetypeRoute
   '/produkter': typeof ProdukterRoute
+  '/smak': typeof SmakRoute
   '/utsolgt': typeof UtsolgtRoute
   '/varer': typeof VarerRoute
 }
@@ -95,7 +111,9 @@ export interface FileRoutesById {
   '/hylle': typeof HylleRoute
   '/kode': typeof KodeRoute
   '/konto': typeof KontoRoute
+  '/kundetype': typeof KundetypeRoute
   '/produkter': typeof ProdukterRoute
+  '/smak': typeof SmakRoute
   '/utsolgt': typeof UtsolgtRoute
   '/varer': typeof VarerRoute
 }
@@ -108,7 +126,9 @@ export interface FileRouteTypes {
     | '/hylle'
     | '/kode'
     | '/konto'
+    | '/kundetype'
     | '/produkter'
+    | '/smak'
     | '/utsolgt'
     | '/varer'
   fileRoutesByTo: FileRoutesByTo
@@ -119,7 +139,9 @@ export interface FileRouteTypes {
     | '/hylle'
     | '/kode'
     | '/konto'
+    | '/kundetype'
     | '/produkter'
+    | '/smak'
     | '/utsolgt'
     | '/varer'
   id:
@@ -130,7 +152,9 @@ export interface FileRouteTypes {
     | '/hylle'
     | '/kode'
     | '/konto'
+    | '/kundetype'
     | '/produkter'
+    | '/smak'
     | '/utsolgt'
     | '/varer'
   fileRoutesById: FileRoutesById
@@ -142,7 +166,9 @@ export interface RootRouteChildren {
   HylleRoute: typeof HylleRoute
   KodeRoute: typeof KodeRoute
   KontoRoute: typeof KontoRoute
+  KundetypeRoute: typeof KundetypeRoute
   ProdukterRoute: typeof ProdukterRoute
+  SmakRoute: typeof SmakRoute
   UtsolgtRoute: typeof UtsolgtRoute
   VarerRoute: typeof VarerRoute
 }
@@ -191,11 +217,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KontoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kundetype': {
+      id: '/kundetype'
+      path: '/kundetype'
+      fullPath: '/kundetype'
+      preLoaderRoute: typeof KundetypeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/produkter': {
       id: '/produkter'
       path: '/produkter'
       fullPath: '/produkter'
       preLoaderRoute: typeof ProdukterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/smak': {
+      id: '/smak'
+      path: '/smak'
+      fullPath: '/smak'
+      preLoaderRoute: typeof SmakRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/utsolgt': {
@@ -222,7 +262,9 @@ const rootRouteChildren: RootRouteChildren = {
   HylleRoute: HylleRoute,
   KodeRoute: KodeRoute,
   KontoRoute: KontoRoute,
+  KundetypeRoute: KundetypeRoute,
   ProdukterRoute: ProdukterRoute,
+  SmakRoute: SmakRoute,
   UtsolgtRoute: UtsolgtRoute,
   VarerRoute: VarerRoute,
 }
