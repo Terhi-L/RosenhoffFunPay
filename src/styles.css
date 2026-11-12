@@ -3,15 +3,38 @@
 @theme {
   --font-sans: 'Archivo', Helvetica, Arial, sans-serif;
   --font-display: 'Archivo Black', 'Archivo', sans-serif;
-  --color-cream: #fbf6ea;
-  --color-ink: #14181f;
+
+  --color-leaf: #2e7d32; /* primary buttons, selected states */
+  --color-leaf-dark: #17451c; /* headline shadow on green */
+  --color-sun: #f5c02b; /* yellow headline on green, badges, wheel CTA */
+  --color-orange: #f28c28; /* decoration, focus rings, warnings (icons only) */
+  --color-orange-deep: #d35f0b; /* orange text/icon bg that passes contrast */
+  --color-melon: #ef5d78; /* decoration */
+  --color-melon-deep: #d9435f;
+  --color-plum: #3b2a6b; /* headings, links, outlines */
+  --color-grape: #6a4fb3;
+  --color-sky: #3fa9de;
+  --color-lime: #8dc63f;
+  --color-alert: #b8324d; /* "Steg 6 av 5", error kicker, fun-meter text */
+
+  --color-mint: #f2f7f1; /* page background */
+  --color-fill: #e6efe4; /* subtle fills, +47 box, steppers */
+  --color-line: #dce6da; /* card borders, progress track */
+  --color-line-strong: #c3d1c0; /* input borders */
+  --color-ink: #1b2b22;
   --color-muted: #5b6470;
-  --color-flag: #c8102e;
-  --color-navy: #13294b;
-  --color-store: #0e6b4f;
-  --color-mustard: #f5c518;
-  --color-sand: #e8e0cc;
-  --color-sand-dark: #d9cfb6;
+  --color-note: #fff4d6; /* fine-print box */
+  --color-note-ink: #5a4300;
+
+  /* Legacy names from the old theme, so pages that haven't been restyled yet
+     keep working. Remove once nothing uses them (betaling, ferdig, produkter). */
+  --color-cream: var(--color-mint);
+  --color-flag: var(--color-alert);
+  --color-navy: var(--color-plum);
+  --color-store: var(--color-leaf);
+  --color-mustard: var(--color-sun);
+  --color-sand: var(--color-line);
+  --color-sand-dark: var(--color-line-strong);
 }
 
 * {
@@ -26,5 +49,5 @@ body,
 
 body {
   margin: 0;
-  background: var(--color-sand);
+  background: var(--color-mint);
 }

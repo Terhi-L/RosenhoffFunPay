@@ -13,8 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BetalingRouteImport } from './routes/betaling'
 import { Route as FerdigRouteImport } from './routes/ferdig'
 import { Route as KodeRouteImport } from './routes/kode'
+import { Route as KontoRouteImport } from './routes/konto'
 import { Route as ProdukterRouteImport } from './routes/produkter'
-import { Route as TelefonRouteImport } from './routes/telefon'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -36,14 +36,14 @@ const KodeRoute = KodeRouteImport.update({
   path: '/kode',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KontoRoute = KontoRouteImport.update({
+  id: '/konto',
+  path: '/konto',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProdukterRoute = ProdukterRouteImport.update({
   id: '/produkter',
   path: '/produkter',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TelefonRoute = TelefonRouteImport.update({
-  id: '/telefon',
-  path: '/telefon',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -52,16 +52,16 @@ export interface FileRoutesByFullPath {
   '/betaling': typeof BetalingRoute
   '/ferdig': typeof FerdigRoute
   '/kode': typeof KodeRoute
+  '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
-  '/telefon': typeof TelefonRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/betaling': typeof BetalingRoute
   '/ferdig': typeof FerdigRoute
   '/kode': typeof KodeRoute
+  '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
-  '/telefon': typeof TelefonRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,22 +69,22 @@ export interface FileRoutesById {
   '/betaling': typeof BetalingRoute
   '/ferdig': typeof FerdigRoute
   '/kode': typeof KodeRoute
+  '/konto': typeof KontoRoute
   '/produkter': typeof ProdukterRoute
-  '/telefon': typeof TelefonRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/betaling' | '/ferdig' | '/kode' | '/produkter' | '/telefon'
+  fullPaths: '/' | '/betaling' | '/ferdig' | '/kode' | '/konto' | '/produkter'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/betaling' | '/ferdig' | '/kode' | '/produkter' | '/telefon'
+  to: '/' | '/betaling' | '/ferdig' | '/kode' | '/konto' | '/produkter'
   id:
     | '__root__'
     | '/'
     | '/betaling'
     | '/ferdig'
     | '/kode'
+    | '/konto'
     | '/produkter'
-    | '/telefon'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -92,8 +92,8 @@ export interface RootRouteChildren {
   BetalingRoute: typeof BetalingRoute
   FerdigRoute: typeof FerdigRoute
   KodeRoute: typeof KodeRoute
+  KontoRoute: typeof KontoRoute
   ProdukterRoute: typeof ProdukterRoute
-  TelefonRoute: typeof TelefonRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -126,18 +126,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/konto': {
+      id: '/konto'
+      path: '/konto'
+      fullPath: '/konto'
+      preLoaderRoute: typeof KontoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/produkter': {
       id: '/produkter'
       path: '/produkter'
       fullPath: '/produkter'
       preLoaderRoute: typeof ProdukterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/telefon': {
-      id: '/telefon'
-      path: '/telefon'
-      fullPath: '/telefon'
-      preLoaderRoute: typeof TelefonRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -148,8 +148,8 @@ const rootRouteChildren: RootRouteChildren = {
   BetalingRoute: BetalingRoute,
   FerdigRoute: FerdigRoute,
   KodeRoute: KodeRoute,
+  KontoRoute: KontoRoute,
   ProdukterRoute: ProdukterRoute,
-  TelefonRoute: TelefonRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
