@@ -3,7 +3,12 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { Screen, StepHeader, primaryButton } from '../components/Screen'
 import productData from '../data/products.json'
 import { useBasket } from '../lib/basket'
-import { alternativeFor, buildAisles, recommend } from '../data/shelf'
+import {
+  alternativeFor,
+  buildAisles,
+  findProduct,
+  recommend,
+} from '../data/shelf'
 import type { CatalogProduct, ShelfProduct, ShelfProfile } from '../data/shelf'
 
 export const Route = createFileRoute('/hylle')({ component: Shelf })
@@ -26,8 +31,27 @@ const SIGNS = [
 ]
 const MILK_SIGN = 'bg-[#1f74a8] text-white'
 
-/** One metre per 18 px of scrolling left to go + shelf height still above you. */
+/** One metre per 18 px between the middle of what you see and the product. */
 const PX_PER_METRE = 18
+/** Further away than this is as cold as it gets. */
+const COLDEST_METRES = 200
+/** Close enough to say you've found it. */
+const FOUND_METRES = 4
+/** The target tile starts glowing from here. */
+const GLOW_METRES = 12
+
+/** Hot-and-cold wording by distance in metres, coldest first. */
+const TEMPERATURES = [
+  { from: 150, label: 'Iskaldt' },
+  { from: 100, label: 'Kaldt' },
+  { from: 60, label: 'Kjølig' },
+  { from: 30, label: 'Lunken' },
+  { from: GLOW_METRES, label: 'Varm' },
+  { from: FOUND_METRES, label: 'Het' },
+  { from: 0, label: 'Du brenner!' },
+]
+const temperature = (metres: number) =>
+  TEMPERATURES.find((t) => metres >= t.from) ?? TEMPERATURES[0]
 
 function Shelf() {
   const aisles = useMemo(() => buildAisles(catalog), [])
@@ -37,19 +61,28 @@ function Shelf() {
   )
   const topPick = alternativeFor('', aisles, recommended)
 
-  const [query, setQuery] = useState('melk')
+  const [query, setQuery] = useState('')
+  const target = useMemo(() => findProduct(aisles, query), [aisles, query])
   const { items, add, remove } = useBasket()
   const picked = useMemo(() => new Set(items.map((item) => item.slug)), [items])
   const [distance, setDistance] = useState<number | null>(null)
   const scroller = useRef<HTMLDivElement>(null)
 
+  // Metres from the middle of what you see to the searched product.
   const measure = () => {
     const el = scroller.current
-    if (!el) return
+    const tile = target
+      ? el?.querySelector(`[data-slug="${target.slug}"]`)
+      : null
+    if (!el || !tile) return setDistance(null)
+    const box = el.getBoundingClientRect()
+    const at = tile.getBoundingClientRect()
     setDistance(
       Math.round(
-        (el.scrollWidth - el.clientWidth - el.scrollLeft + el.scrollTop) /
-          PX_PER_METRE,
+        Math.hypot(
+          at.left + at.width / 2 - (box.left + box.width / 2),
+          at.top + at.height / 2 - (box.top + box.height / 2),
+        ) / PX_PER_METRE,
       ),
     )
   }
@@ -57,10 +90,10 @@ function Shelf() {
   // Like the store: you arrive at the bottom left, and the milk is top right.
   useEffect(() => {
     const el = scroller.current
-    if (!el) return
-    el.scrollTop = el.scrollHeight
-    measure()
+    if (el) el.scrollTop = el.scrollHeight
   }, [])
+
+  useEffect(measure, [target])
 
   const toggle = (tile: ShelfProduct) => {
     if (picked.has(tile.slug)) {
@@ -78,9 +111,14 @@ function Shelf() {
     )
   }
 
-  const searchMessage = query.trim()
-    ? `0 treff på «${query.trim()}». Mente du «${topPick?.name ?? 'noe annet'}»?`
-    : 'Søket er i beta. Det har vært i beta lenge.'
+  const searchMessage = target
+    ? `0 treff på «${query.trim()}». Men vi kan si om du er varm eller kald.`
+    : query.trim()
+      ? `0 treff på «${query.trim()}». Mente du «${topPick?.name ?? 'noe annet'}»?`
+      : 'Søket er i beta. Det har vært i beta lenge.'
+  const found = target && distance !== null && distance <= FOUND_METRES
+  const heat =
+    distance === null ? 0 : Math.max(0, 1 - distance / COLDEST_METRES)
 
   return (
     <Screen>
@@ -104,16 +142,38 @@ function Shelf() {
         <p aria-live="polite" className="m-0 mx-1.5 text-[13px] text-muted">
           {searchMessage}
         </p>
-        <div className="mx-1 flex items-center justify-between text-[13px] font-bold">
-          <span className="text-plum">Sveip sidelengs og opp</span>
-          <span aria-live="polite" className="text-alert">
-            {distance === null
-              ? ''
-              : distance <= 3
-                ? 'Du er ved melka. Gratulerer.'
-                : `${distance} m til melka`}
-          </span>
-        </div>
+        {target && distance !== null ? (
+          <div className="mx-1 flex flex-col gap-1.5">
+            <div className="flex items-center justify-between gap-2 text-[13px] font-bold">
+              <span aria-live="polite" className="text-alert">
+                {found
+                  ? `Du er ved ${target.name}. Gratulerer.`
+                  : temperature(distance).label}
+              </span>
+              <span className="text-plum">
+                {found ? '' : `${distance} m til ${target.name}`}
+              </span>
+            </div>
+            <div
+              role="img"
+              aria-label={`Temperatur: ${temperature(distance).label}`}
+              className="relative h-2 rounded-full"
+              style={{
+                background:
+                  'linear-gradient(90deg, var(--color-sky), var(--color-sun), var(--color-alert))',
+              }}
+            >
+              <span
+                className="absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-ink bg-white transition-[left] duration-200"
+                style={{ left: `${heat * 100}%` }}
+              />
+            </div>
+          </div>
+        ) : (
+          <p className="m-0 mx-1 text-[13px] font-bold text-plum">
+            Sveip sidelengs og opp
+          </p>
+        )}
       </div>
 
       <div
@@ -161,6 +221,7 @@ function Shelf() {
                           <button
                             key={tile.slug}
                             type="button"
+                            data-slug={tile.slug}
                             onClick={() => toggle(tile)}
                             aria-pressed={isPicked}
                             aria-label={`${tile.name}${isRecommended ? ', anbefalt' : ''}, kr ${tile.price}`}
@@ -168,6 +229,12 @@ function Shelf() {
                               isPicked
                                 ? 'border-ink outline-[3px] outline-ink'
                                 : 'border-line'
+                            } ${
+                              tile.slug === target?.slug &&
+                              distance !== null &&
+                              distance <= GLOW_METRES
+                                ? 'animate-pulse ring-4 ring-alert motion-reduce:animate-none'
+                                : ''
                             }`}
                           >
                             <span className="flex min-h-0 flex-1 items-center justify-center">
@@ -179,7 +246,12 @@ function Shelf() {
                                   className="max-h-full max-w-full object-contain"
                                 />
                               ) : (
-                                <span className="size-12 rounded-md bg-[#1f74a8]" />
+                                <span
+                                  className="size-12 rounded-md"
+                                  style={{
+                                    background: tile.accent ?? '#1f74a8',
+                                  }}
+                                />
                               )}
                             </span>
                             <span className="line-clamp-2 text-[10px] leading-[1.15] font-bold">
