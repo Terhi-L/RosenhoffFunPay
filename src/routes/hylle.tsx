@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Screen, StepHeader, primaryButton } from '../components/Screen'
 import productData from '../data/products.json'
+import { useBasket } from '../lib/basket'
 import { alternativeFor, buildAisles, recommend } from '../data/shelf'
-import type { CatalogProduct, ShelfProfile } from '../data/shelf'
+import type { CatalogProduct, ShelfProduct, ShelfProfile } from '../data/shelf'
 
 export const Route = createFileRoute('/hylle')({ component: Shelf })
 
@@ -37,7 +38,8 @@ function Shelf() {
   const topPick = alternativeFor('', aisles, recommended)
 
   const [query, setQuery] = useState('melk')
-  const [basket, setBasket] = useState<Set<string>>(new Set())
+  const { items, add, remove } = useBasket()
+  const picked = useMemo(() => new Set(items.map((item) => item.slug)), [items])
   const [distance, setDistance] = useState<number | null>(null)
   const scroller = useRef<HTMLDivElement>(null)
 
@@ -60,12 +62,21 @@ function Shelf() {
     measure()
   }, [])
 
-  const toggle = (slug: string) =>
-    setBasket((current) => {
-      const next = new Set(current)
-      if (!next.delete(slug)) next.add(slug)
-      return next
-    })
+  const toggle = (tile: ShelfProduct) => {
+    if (picked.has(tile.slug)) {
+      remove(tile.slug)
+      return
+    }
+    add(
+      {
+        slug: tile.slug,
+        name: tile.name,
+        price: tile.price,
+        image: tile.image ?? undefined,
+      },
+      { wasRecommended: recommended.includes(tile.slug) },
+    )
+  }
 
   const searchMessage = query.trim()
     ? `0 treff på «${query.trim()}». Mente du «${topPick?.name ?? 'noe annet'}»?`
@@ -134,7 +145,7 @@ function Shelf() {
                   >
                     <div className="flex items-end gap-2 px-2.5">
                       {shelf.map((tile) => {
-                        const picked = basket.has(tile.slug)
+                        const isPicked = picked.has(tile.slug)
                         const isRecommended = recommended.includes(tile.slug)
                         if (!tile.inStock) {
                           return (
@@ -150,11 +161,11 @@ function Shelf() {
                           <button
                             key={tile.slug}
                             type="button"
-                            onClick={() => toggle(tile.slug)}
-                            aria-pressed={picked}
+                            onClick={() => toggle(tile)}
+                            aria-pressed={isPicked}
                             aria-label={`${tile.name}${isRecommended ? ', anbefalt' : ''}, kr ${tile.price}`}
                             className={`relative flex h-[132px] w-[84px] flex-none flex-col rounded-md border bg-white p-1 text-left ${
-                              picked
+                              isPicked
                                 ? 'border-ink outline-[3px] outline-ink'
                                 : 'border-line'
                             }`}
@@ -182,7 +193,7 @@ function Shelf() {
                                 Anbefalt
                               </span>
                             )}
-                            {picked && (
+                            {isPicked && (
                               <span className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-leaf text-xs text-white">
                                 ✓
                               </span>
@@ -202,7 +213,7 @@ function Shelf() {
 
       <div className="flex items-center gap-3 bg-mint px-4 pt-2.5 pb-7">
         <div className="flex-1 text-sm leading-[1.3]">
-          <strong className="text-base">{basket.size} registrert</strong>
+          <strong className="text-base">{picked.size} registrert</strong>
           <br />
           <span className="text-muted">4 i kurven</span>
         </div>
